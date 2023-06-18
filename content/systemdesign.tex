@@ -2,4 +2,69 @@
 
 \section{Technische Anforderungen und Systemdesign}
 
-TODO Matthias
+\subsection{Technische Anforderungen}
+Nachfolgend werden die technischen Anforderungen an das IoT-System beschrieben.
+
+\paragraph{Systemübersicht}
+Die IoT-Gartenbewässerungsanlage sollte in der Lage sein, den Wasserverbrauch effizient und automatisch zu steuern, um den Pflanzen im Garten eine optimale Bewässerung zu bieten. Das System sollte aus Sensoren, Aktuatoren, einer zentralen Steuereinheit und einer Benutzeroberfläche bestehen.
+
+\paragraph{Sensoren}
+\begin{itemize}
+\item Boden-Feuchtigkeitssensoren: zur Messung der aktuellen Bodenfeuchtigkeit in verschiedenen Bereichen des Gartens
+\item Boden-Temperatursensoren: zur Messung der aktuellen Bodentemperatur in verschiedenen Bereichen des Gartens
+\item Luft-Temperatursensor: zur Erfassung der aktuellen Umgebungstemperatur in der Luft
+\item Lichtsensor: zur Erfassung der aktuellen Sonneneinstrahlung
+\end{itemize}
+
+\paragraph{Aktuatoren}
+\begin{itemize}
+\item Wasserpumpe: zur Förderung des Wassers aus einer Wasserquelle (z.B. Regenwasserzisterne) in das zu bewässernde Beet
+\item Sonnenschutz: zum Schutz von lichtempfindlichen Pflanzen bei zu starker Sonneneinstrahlung 
+\end{itemize}
+
+
+\paragraph{Stromversorgung}
+\begin{itemize}
+\item Anschluss an Netzstrom: standardmäßig wird davon ausgegangen, dass das zu bewässernde Gartenbeet Anschluss an den Netzstrom hat
+\item alternative Energiequellen: Solarzellen und/oder Batterien, falls keine Versorgung über Netzstrom möglich ist
+\end{itemize}
+
+\paragraph{Kommunikation}
+\begin{itemize}
+\item Mikrocontroller: zur Verarbeitung der Sensordaten, Steuerung der Aktuatoren und Kommunikation über eine Netzwerkschicht
+\item Kommunikationsprotokoll: WLAN, um eine drahtlose Verbindung zwischen den Hardwarekomponenten und der Steuereinheit herzustellen
+\end{itemize}
+
+\paragraph{Steuereinheit}
+\begin{itemize}
+\item Zentraler Server: Steuerung der IoT-Gartenbewässerungsanlage auf Basis selbst implementierter Funktionslogik
+\end{itemize}
+
+\paragraph{Benutzeroberfläche}
+\begin{itemize}
+\item Smartphone-App oder Webanwendung: zur Fernsteuerung und Überwachung der IoT-Gartenbewässerungsanlage, Anzeige von Sensordaten und Einstellung von Bewässerungsparametern
+\item Benachrichtigungsfunktion: um den Benutzer über den aktuellen Systemstatus oder wichtige Ereignisse (z.B. Frostgefahr) zu informieren
+\end{itemize}
+
+\paragraph{Softwareanforderungen}
+\begin{itemize}
+\item Automatisierung: Die Bewässerungsanlage sollte in der Lage sein, automatisch auf Basis der Sensordaten und vordefinierter Schwellenwerte zu arbeiten
+\item Manueller Modus: Möglichkeit zur manuellen Steuerung der Bewässerung über die Benutzeroberfläche, falls erforderlich
+\item Anpassungsfähigkeit: Die Software sollte in der Lage sein, mit unterschiedlichen Gartenlayouts, Pflanzentypen und Bewässerungszonen umzugehen
+\end{itemize}
+
+
+\subsection{Aufbau der Systemarchitektur}
+
+Für die Umsetzung der technischen Anforderungen wird die in in Abb. \ref{fig:iotschichten} modellierte Systemarchitektur gewählt. 
+Auf Hardwareebene kommt ein ESP-Mikrocontroller zum Einsatz, um die Sensordaten in einen MQTT-Broker über WLAN zu veröffentlichen. 
+Gleichzeitig wird für die Aktoren ein eigener ESP-Mikrocontroller eingesetzt, um die Wasserpumpe und Beschattung zu steuern. Die Befehle von Steuereinheit werden über einen MQTT-Broker empfangen.
+In der Applikationsschicht wird mit NodeRed für die Logik für die IoT-Steuerung implementiert, über Telegram werden der Benutzer über wichtige Informationen benachrichtigt und in Grafana wird mittels eines Dashboards relevante Daten in Form von Auswertungen für den Nutzer aufbereitet.
+
+Die einzelnen Schichten aus der Systemarchitektur werden in den nachfolgenden Kapiteln näher beschrieben.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{iot_plantzz.drawio.png}
+  \caption{Aufbau der IoT-Architektur}\label{fig:iotschichten}
+\end{figure}
