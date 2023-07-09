@@ -6,22 +6,22 @@
 Nachfolgend werden die technischen Anforderungen an das IoT-System beschrieben.
 
 \paragraph{Systemübersicht}
-Die IoT-Gartenbewässerungsanlage sollte in der Lage sein, den Wasserverbrauch effizient und automatisch zu steuern, um den Pflanzen im Garten eine optimale Bewässerung zu bieten. Das System sollte aus Sensoren, Aktuatoren, einer zentralen Steuereinheit und einer Benutzeroberfläche bestehen.
+Die IoT-Gartenbewässerungsanlage sollte in der Lage sein, den Wasserverbrauch effizient und automatisch zu steuern, um den Pflanzen im Garten eine optimale Bewässerung zu bieten. Das System sollte aus Sensoren, Aktoren, einer zentralen Steuereinheit und einer Benutzeroberfläche bestehen.
 
 \paragraph{Sensoren}
 \begin{itemize}
 \item Boden-Feuchtigkeitssensoren: zur Messung der aktuellen Bodenfeuchtigkeit in verschiedenen Bereichen des Gartens
 \item Boden-Temperatursensoren: zur Messung der aktuellen Bodentemperatur in verschiedenen Bereichen des Gartens
+\item Luft-Feuchtigkeitssensor: zur Erfassung der aktuellen Feuchtigkeit in der Luft
 \item Luft-Temperatursensor: zur Erfassung der aktuellen Umgebungstemperatur in der Luft
 \item Lichtsensor: zur Erfassung der aktuellen Sonneneinstrahlung
 \end{itemize}
 
-\paragraph{Aktuatoren}
+\paragraph{Aktoren}
 \begin{itemize}
-\item Wasserpumpe: zur Förderung des Wassers aus einer Wasserquelle (z.B. Regenwasserzisterne) in das zu bewässernde Beet
+\item Wasserpumpe: zur Beförderung des Wassers aus einer Wasserquelle (z.B. Regenwasserzisterne) in das zu bewässernde Beet
 \item Sonnenschutz: zum Schutz von lichtempfindlichen Pflanzen bei zu starker Sonneneinstrahlung 
 \end{itemize}
-
 
 \paragraph{Stromversorgung}
 \begin{itemize}
@@ -31,8 +31,8 @@ Die IoT-Gartenbewässerungsanlage sollte in der Lage sein, den Wasserverbrauch e
 
 \paragraph{Kommunikation}
 \begin{itemize}
-\item Mikrocontroller: zur Verarbeitung der Sensordaten, Steuerung der Aktuatoren und Kommunikation über eine Netzwerkschicht
-\item Kommunikationsprotokoll: WLAN, um eine drahtlose Verbindung zwischen den Hardwarekomponenten und der Steuereinheit herzustellen
+\item Mikrocontroller: zur Verarbeitung der Sensordaten, Steuerung der Aktoren und Kommunikation über eine Netzwerkschicht
+\item Kommunikationsprotokoll: Wireless Local Area Network (WLAN), um eine drahtlose Verbindung zwischen den Hardwarekomponenten und der Steuereinheit herzustellen
 \end{itemize}
 
 \paragraph{Steuereinheit}
@@ -57,14 +57,13 @@ Die IoT-Gartenbewässerungsanlage sollte in der Lage sein, den Wasserverbrauch e
 \subsection{Aufbau der Systemarchitektur}
 
 Für die Umsetzung der technischen Anforderungen wird die in in Abb. \ref{fig:iotschichten} modellierte Systemarchitektur gewählt. 
-Auf Hardwareebene kommt ein ESP-Mikrocontroller zum Einsatz, um die Sensordaten in einen MQTT-Broker über WLAN zu veröffentlichen. 
-Gleichzeitig wird für die Aktoren ein eigener ESP-Mikrocontroller eingesetzt, um die Wasserpumpe und Beschattung zu steuern. Die Befehle von Steuereinheit werden über einen MQTT-Broker empfangen.
-In der Applikationsschicht wird mit NodeRed für die Logik für die IoT-Steuerung implementiert, über Telegram werden der Benutzer über wichtige Informationen benachrichtigt und in Grafana wird mittels eines Dashboards relevante Daten in Form von Auswertungen für den Nutzer aufbereitet.
 
-Die einzelnen Schichten aus der Systemarchitektur werden in den nachfolgenden Kapiteln näher beschrieben.
-
-\begin{figure}[htbp]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\textwidth]{iot_plantzz.drawio.png}
+  \includegraphics[width=0.8\textwidth]{Aufbau_Architektur.png}
   \caption{Aufbau der IoT-Architektur}\label{fig:iotschichten}
 \end{figure}
+
+Auf Hardwareebene kommt ein ESP32-Mikrocontroller zum Einsatz, um die Sensordaten über einen MQTT-Broker zu veröffentlichen. Gleichzeitig wird für die Aktoren ein eigener ESP32-Mikrocontroller eingesetzt, um die Wasserpumpe und Beschattung zu steuern. Die Befehle zur Steuerung der Aktoren werden von dem MQTT-Broker empfangen. Der MQTT-Broker agiert dabei als Vermittler der Nachrichten in der Netzwerkschicht. In der Applikationsschicht wird mit NodeRed die Logik für die IoT-Steuerung implementiert, über Telegram werden der Benutzer über wichtige Informationen benachrichtigt und in Grafana werden mittels eines Dashboards relevante Daten in Form von Auswertungen für den Nutzer aufbereitet.
+
+Die einzelnen Schichten aus der Systemarchitektur werden in den nachfolgenden Kapiteln näher beschrieben.
