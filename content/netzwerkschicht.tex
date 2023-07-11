@@ -2,4 +2,24 @@
 
 \section{Netzwerkschicht}
 
-TODO..
+Die Aufgabe der Netzwerkschicht ist es die verschiedenen Mikrocontroller mit der Applikationsebene zu verbinden.
+Hierzu sind die Mikrocontroller hierzu, wie bereits beschrieben, mit einem WLAN verbunden, welches ihnen Zugriff auf das öffentliche Internet gewährt.
+
+Dort können sie sich mit einem MQTT-Broker verbinden, welcher als \gls{mom} Teil der Netzwerkschicht bildet und den einfachen Austausch von Daten zwischen den Controllern und der Anwendungsschicht ermöglicht.
+Eine funktionale und übersichtliche Gestaltung der Topics ist dabei wichtig für die Verständlichkeit des Systems, weswegen die Topics des Systems einer klaren Struktur folgen:
+
+\begin{minted}{text}
+  plantzz/client
+  plantzz/temperature/ground
+  plantzz/temperature/air
+  plantzz/humidity/ground
+  plantzz/humidity/air
+  plantzz/brightness
+  plantzz/pump/state
+  plantzz/pump/command
+  plantzz/canvas/state
+  plantzz/canvas/command
+\end{minted}
+
+Die Sensor-Controller schreiben ihre Messwerte zu den dazugehörigen Topics, wie zum Beispiel \texttt{plantzz/temperature/ground}, während die Aktor-Controller auf den Command-Topics hören, um Kommandos zu empfangen und ihren aktuellen status auf die State-Topics schreiben.
+Zudem schreiben alle Controller ihren aktuellen Status auf das \texttt{plantzz/client} Topic und registrieren einen Last Will, damit der Status auch im Falle eines Verbindungsverlustes zum Controller aktualisiert wird.

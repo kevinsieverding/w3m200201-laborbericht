@@ -13,10 +13,13 @@
         "%DOC%"
       ],
       "env": {}
-    },
+    }
   ],
   "latex-workshop.latex.autoClean.run": "onBuilt",
   "cSpell.words": [
+    "DHBW",
+    "Integrationen",
+    "MQTT"
   ],
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 110,
