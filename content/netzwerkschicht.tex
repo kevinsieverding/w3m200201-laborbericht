@@ -2,10 +2,11 @@
 
 \section{Netzwerkschicht}
 
-Die Aufgabe der Netzwerkschicht ist es die verschiedenen Mikrocontroller mit der Applikationsebene zu verbinden.
-Hierzu sind die Mikrocontroller hierzu, wie bereits beschrieben, mit einem WLAN verbunden, welches ihnen Zugriff auf das öffentliche Internet gewährt.
+Eine Stufe über der Hardwareschicht wird nun in diesem Kapitel die Netzwerkschicht näher beleuchtet.
+Die Aufgabe der Netzwerkschicht ist es die beiden Mikrocontroller mit der Applikationsebene zu verbinden.
+Hierzu sind die Mikrocontroller, wie bereits beschrieben, mit dem hausinternen WLAN verbunden, welches ihnen Zugriff auf das öffentliche Internet gewährt.
 
-Dort können sie sich mit einem MQTT-Broker verbinden, welcher als \gls{mom} Teil der Netzwerkschicht bildet und den einfachen Austausch von Daten zwischen den Controllern und der Anwendungsschicht ermöglicht.
+Dort können sie sich mit einem MQTT-Broker verbinden, welcher als \gls{mom} die Netzwerkschicht der intelligenten Gartenbewässerung bildet und den einfachen Austausch von Daten zwischen den Mikrocontrollern und der Anwendungsschicht ermöglicht.
 Eine funktionale und übersichtliche Gestaltung der Topics ist dabei wichtig für die Verständlichkeit des Systems, weswegen die Topics des Systems einer klaren Struktur folgen:
 
 \begin{minted}{text}
@@ -21,5 +22,5 @@ Eine funktionale und übersichtliche Gestaltung der Topics ist dabei wichtig fü
   plantzz/canvas/command
 \end{minted}
 
-Die Sensor-Controller schreiben ihre Messwerte zu den dazugehörigen Topics, wie zum Beispiel \texttt{plantzz/temperature/ground}, während die Aktor-Controller auf den Command-Topics hören, um Kommandos zu empfangen und ihren aktuellen status auf die State-Topics schreiben.
-Zudem schreiben alle Controller ihren aktuellen Status auf das \texttt{plantzz/client} Topic und registrieren einen Last Will, damit der Status auch im Falle eines Verbindungsverlustes zum Controller aktualisiert wird.
+Der Mikrocontroller der Sensoren veröffentlicht seine Messwerte in den dazugehörigen Topics, wie zum Beispiel \texttt{plantzz/temperature/ground}, während der Mikrocontroller der Aktoren auf die Command-Topics hört, um Kommandos zu empfangen, und den aktuellen Status der jeweiligen Aktoren in die State-Topics schreibt.
+Zudem schreiben beide Microcontroller ihren aktuellen Status bezüglich ihres MQTT-Clients in das \texttt{plantzz/client} Topic und registrieren einen Last Will, damit der Status auch im Falle eines unerwarteten Verbindungsverlustes zum Mikrocontroller aktualisiert wird.
