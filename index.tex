@@ -37,6 +37,8 @@
 % set base path for graphics
 \graphicspath{{assets/img}}
 
+%\usepackage{listings}
+
 % DOCUMENT
 
 \begin{document}
@@ -68,8 +70,8 @@
 \clearpage
 
 % use to change the title of the list of listings
-% \renewcommand{\listoflistingscaption}{Quellcodeverzeichnis}
-%\listoflistings
+\renewcommand{\listoflistingscaption}{Quellcodeverzeichnis}
+\listoflistings
 
 \clearpage
 
@@ -140,6 +142,7 @@
 \pagestyle{plain.scrheadings}
 
 \appendix
+\input{appendix1}
 
 % insert appendix sections here
 

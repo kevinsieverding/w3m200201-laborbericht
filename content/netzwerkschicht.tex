@@ -6,11 +6,28 @@ Eine Stufe über der Hardwareschicht wird nun in diesem Kapitel die Netzwerkschi
 Die Aufgabe der Netzwerkschicht ist es die beiden Mikrocontroller mit der Applikationsebene zu verbinden.
 Hierzu sind die Mikrocontroller, wie bereits beschrieben, mit dem hausinternen WLAN verbunden, welches ihnen Zugriff auf das öffentliche Internet gewährt.
 
-Dort können sie sich mit einem MQTT-Broker verbinden, welcher als \gls{mom} die Netzwerkschicht der intelligenten Gartenbewässerung bildet und den einfachen Austausch von Daten zwischen den Mikrocontrollern und der Anwendungsschicht ermöglicht.
+Dort können sie sich mit einem MQTT-Broker verbinden, welcher als \gls{mom} die Netzwerkschicht der intelligenten Gartenbewässerung bildet und den einfachen Austausch von Daten zwischen den Mikrocontrollern und der Anwendungsschicht ermöglicht. In List. \ref{list:mqtt} wird die Verbindung zum MQTT-Broker inkl. \textit{Last Will} dargestellt.
+
+\begin{listing}[!ht]
+\begin{minted}{python3}
+print("Connecting to MQTT server... ", end="")
+mqtt_client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, user=MQTT_USER, password=MQTT_PASSWORD, keepalive=20)
+# Retain=true is useful that even unsubscribed consumers of this topic will get this message
+mqtt_client.set_last_will("plantzz/espsensors/status", "offline", retain=True)
+
+mqtt_client.connect()
+mqtt_client.publish("plantzz/espsensors/status", "online", retain=True)
+print("MQTT Connected!")
+\end{minted}
+\caption{Verbindung des MQTT-Clients vom Mikrocontroller mit MQTT-Broker}
+\label{list:mqtt}
+\end{listing}  
+
 Eine funktionale und übersichtliche Gestaltung der Topics ist dabei wichtig für die Verständlichkeit des Systems, weswegen die Topics des Systems einer klaren Struktur folgen:
 
 \begin{minted}{text}
-  plantzz/client
+  plantzz/espsensors/status
+  plantzz/espactors/status
   plantzz/temperature/ground
   plantzz/temperature/air
   plantzz/humidity/ground
@@ -23,4 +40,7 @@ Eine funktionale und übersichtliche Gestaltung der Topics ist dabei wichtig fü
 \end{minted}
 
 Der Mikrocontroller der Sensoren veröffentlicht seine Messwerte in den dazugehörigen Topics, wie zum Beispiel \texttt{plantzz/temperature/ground}, während der Mikrocontroller der Aktoren auf die Command-Topics hört, um Kommandos zu empfangen, und den aktuellen Status der jeweiligen Aktoren in die State-Topics schreibt.
-Zudem schreiben beide Microcontroller ihren aktuellen Status bezüglich ihres MQTT-Clients in das \texttt{plantzz/client} Topic und registrieren einen Last Will, damit der Status auch im Falle eines unerwarteten Verbindungsverlustes zum Mikrocontroller aktualisiert wird.
+
+\paragraph{Letzer Wille bei unerwarteten Verbindungsabbrüchen}
+
+Zudem schreiben beide Microcontroller ihren aktuellen Status bezüglich ihres MQTT-Clients in das Topic \texttt{plantzz/espsensors/status} für den Mikrocontroller der Sensoren bzw. in das Topic \texttt{plantzz/espactors/status} für den Mikrocontroller der Aktoren. Der Einsatz eines solchen \textit{Last Will} eignet sich, damit der Status auch im Falle eines unerwarteten Verbindungsverlustes zum Mikrocontroller aktualisiert wird. Durch den Einsatz des \textit{Last Will} können andere Clients über den Offline-Status informiert werden.
