@@ -141,10 +141,14 @@
 
 \pagestyle{plain.scrheadings}
 
-\appendix
-\input{appendix1}
-
+%\appendix
 % insert appendix sections here
+
+\newpage
+\appendix
+\ihead{\appendixname~\thechapter}
+\pagenumbering{Roman}
+\input{appendix1}
 
 \clearpage
 

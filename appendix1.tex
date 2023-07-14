@@ -1,0 +1,218 @@
+%% !TeX root = ../index.tex
+
+\section{Quellcode}
+
+\begin{listing}[!ht]
+\begin{minted}{python3}
+from machine import ADC, Pin
+import dht
+import time
+import ujson
+import network
+from umqtt.simple import MQTTClient 
+
+# MQTT server parameters
+MQTT_CLIENT_ID = "plantzz-iot-client"
+MQTT_BROKER    = "xxx.xxx.de"
+MQTT_USER      = "xxx"
+MQTT_PASSWORD  = "xxx"
+
+# Topic declaration
+MQTT_TOPIC_TEMP_GROUND = "plantzz/temperature/ground"
+MQTT_TOPIC_TEMP_AIR = "plantzz/temperature/air"
+MQTT_TOPIC_HUMIDITY_GROUND = "plantzz/humidity/ground"
+MQTT_TOPIC_HUMIDITY_AIR = "plantzz/humidity/air"
+MQTT_TOPIC_BRIGHTNESS = "plantzz/brightness"
+
+def connect_wifi():
+    print("Connecting to WiFi", end="")
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect('Wokwi-GUEST', '')
+    while not sta_if.isconnected():
+    print(".", end="")
+    time.sleep(0.1)
+    print("WiFi Connected!")
+
+connect_wifi()
+
+print("Connecting to MQTT server... ", end="")
+mqtt_client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, user=MQTT_USER, password=MQTT_PASSWORD, keepalive=20)
+mqtt_client.set_last_will("espsensors/status", "offline", retain=True)
+
+mqtt_client.connect()
+mqtt_client.publish('espsensors/status', 'online', retain=True)
+print("MQTT Connected!")
+\end{minted}
+\caption{Python-Implementierung des Mikrocontroller der Sensoren (Part 1)}
+\label{list:wokwi_sensoren1}
+\end{listing}
+
+\begin{listing}[!ht]
+\begin{minted}{python3}
+# Attributes of LDR - default values
+LDR_RL10 = 50
+LDR_GAMMA = 0.7
+
+# Define input pins
+sensor_dht_ground = dht.DHT22(Pin(5))
+sensor_dht_air = dht.DHT22(Pin(18))
+# we have to use some ADC1 pin (32-39), because WiFi and ADC2 doesn't work together
+ldr = ADC(Pin(32, Pin.IN))
+
+def publish_sensor_value(sensor_value, topic_name):
+    message = ujson.dumps({
+    "value": sensor_value,
+    })
+    print("Reporting to MQTT topic {}: {}".format(topic_name, message))
+    mqtt_client.publish(topic_name, message)
+
+while True:
+    # Get DHT values
+    sensor_dht_ground.measure()
+    sensor_dht_air.measure()
+
+    # Read analog value from LDR and convert to digital value
+    ldr_digital_value = ldr.read_u16()
+    # Convert digital value to lux
+    ldr_voltage = ldr_digital_value / 65535 * 5
+    ldr_resistance = 2000 * ldr_voltage / (1 - ldr_voltage / 5)
+    brightness_value = round(pow(LDR_RL10 * 1e3 * pow(10, LDR_GAMMA) / ldr_resistance, (1 / LDR_GAMMA)))
+    
+    sensors = {
+        MQTT_TOPIC_TEMP_GROUND: sensor_dht_ground.temperature(),
+        MQTT_TOPIC_HUMIDITY_GROUND: sensor_dht_ground.humidity(),
+        MQTT_TOPIC_TEMP_AIR: sensor_dht_air.temperature(),
+        MQTT_TOPIC_HUMIDITY_AIR: sensor_dht_air.humidity(),
+        MQTT_TOPIC_BRIGHTNESS: brightness_value,
+    }
+
+    # Publish sensor values
+    for key in sensors:
+        publish_sensor_value(sensors[key], key)
+    
+    time.sleep(5)
+\end{minted}
+\caption{Python-Implementierung des ESP der Sensoren (Part 2)}
+\label{list:wokwi_sensoren2}
+\end{listing}
+
+\begin{listing}[!ht]
+\begin{minted}{python3}
+from machine import Pin,PWM
+import time
+import ujson
+import network
+from umqtt.simple import MQTTClient 
+from servo import Servo
+
+# MQTT Server Parameters
+MQTT_CLIENT_ID = "plantzz-iot-client-actuators"
+MQTT_BROKER    = "xxx.xx.de"
+MQTT_USER      = "xxx"
+MQTT_PASSWORD  = "xxx"
+
+MQTT_TOPIC_PUMP_STATE = "plantzz/pump/state"
+MQTT_TOPIC_PUMP_COMMAND = "plantzz/pump/command"
+MQTT_TOPIC_CANVAS_STATE = "plantzz/canvas/state"
+MQTT_TOPIC_CANVAS_COMMAND = "plantzz/canvas/command"
+
+def connect_wifi():
+    print("Connecting to WiFi", end="")
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect('Wokwi-GUEST', '')
+    while not sta_if.isconnected():
+    print(".", end="")
+    time.sleep(0.1)
+    print("WiFi Connected!")
+
+connect_wifi()
+
+print("Connecting to MQTT server... ", end="")
+mqtt_client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, user=MQTT_USER, password=MQTT_PASSWORD, keepalive=100)
+mqtt_client.set_last_will("espactuators/status", "offline", retain=True)
+\end{minted}
+\caption{Python-Implementierung des ESP der Aktoren (Part 1)}
+\label{list:wokwi_aktoren1}
+\end{listing}
+
+\begin{listing}[!ht]
+\begin{minted}{python3}
+
+
+relay = Pin(15, Pin.OUT)
+
+def publish_actuator_state(topic_name, actuator_state):
+    message = ujson.dumps({
+        "state": actuator_state,
+    })
+    print("Reporting to MQTT topic {}: {}".format(topic_name, message))
+    mqtt_client.publish(topic_name, message)
+    
+def control_pump(command):
+    print(command)
+    if (command == 'activate'):
+        relay.value(1)
+        publish_actuator_state(MQTT_TOPIC_PUMP_STATE, 'active')
+    elif (command == 'deactivate'):
+        relay.value(0)
+        publish_actuator_state(MQTT_TOPIC_PUMP_STATE, 'inactive')
+
+motor=Servo(pin=18)
+
+def control_canvas(command):
+    if (command == 'extend'):
+        motor.move(180)
+        publish_actuator_state(MQTT_TOPIC_CANVAS_STATE, 'extended')
+    elif (command == 'retract'):
+        motor.move(0)
+        publish_actuator_state(MQTT_TOPIC_CANVAS_STATE, 'retracted')
+
+def sub(topic, msg):
+    print('received message %s on topic %s' % (msg, topic))
+    obj =  ujson.loads(msg)
+    command = obj['command']
+    topic = topic.decode("UTF-8")
+    if (MQTT_TOPIC_PUMP_COMMAND == topic):
+      control_pump(command)
+    elif (MQTT_TOPIC_CANVAS_COMMAND == topic):
+       control_canvas(command)
+    
+
+mqtt_client.set_callback(sub)
+
+mqtt_client.connect()
+mqtt_client.publish('espactuators/status', 'online', retain=True)
+\end{minted}
+\caption{Python-Implementierung des ESP der Aktoren (Part 2)}
+\label{list:wokwi_aktoren2}
+\end{listing}
+
+
+
+\begin{listing}[!ht]
+\begin{minted}{python3}
+# this function simulates mqtt messages to test the actuators
+def test_messages():
+    sub(b"plantzz/pump/command", b'{"command":"activate"}')
+    sub(b"plantzz/canvas/command", b'{"command":"extend"}')
+    time.sleep(4)
+    sub(b"plantzz/pump/command", b'{"command":"deactivate"}')
+    sub(b"plantzz/canvas/command", b'{"command":"retract"}')
+test_messages()
+
+mqtt_client.subscribe("plantzz/pump/command")
+mqtt_client.subscribe("plantzz/canvas/command")
+
+print("MQTT Connected!")
+
+while True:
+    mqtt_client.wait_msg()
+    time.sleep(1)
+
+mqtt_client.disconnect()
+\end{minted}
+\caption{Python-Implementierung des ESP der Aktoren (Part 3)}
+\label{list:wokwi_aktoren3}
+\end{listing}

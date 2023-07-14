@@ -19,7 +19,7 @@ mqtt_client.connect()
 mqtt_client.publish("plantzz/espsensors/status", "online", retain=True)
 print("MQTT Connected!")
 \end{minted}
-\caption{Verbindung des MQTT-Clients vom Mikrocontroller mit MQTT-Broker}
+\caption{Verbindung des MQTT-Clients vom ESP mit MQTT-Broker}
 \label{list:mqtt}
 \end{listing}  
 
@@ -27,7 +27,7 @@ Eine funktionale und übersichtliche Gestaltung der Topics ist dabei wichtig fü
 
 \begin{minted}{text}
   plantzz/espsensors/status
-  plantzz/espactors/status
+  plantzz/espactuators/status
   plantzz/temperature/ground
   plantzz/temperature/air
   plantzz/humidity/ground
@@ -43,4 +43,4 @@ Der Mikrocontroller der Sensoren veröffentlicht seine Messwerte in den dazugeh�
 
 \paragraph{Letzer Wille bei unerwarteten Verbindungsabbrüchen}
 
-Zudem schreiben beide Microcontroller ihren aktuellen Status bezüglich ihres MQTT-Clients in das Topic \texttt{plantzz/espsensors/status} für den Mikrocontroller der Sensoren bzw. in das Topic \texttt{plantzz/espactors/status} für den Mikrocontroller der Aktoren. Der Einsatz eines solchen \textit{Last Will} eignet sich, damit der Status auch im Falle eines unerwarteten Verbindungsverlustes zum Mikrocontroller aktualisiert wird. Durch den Einsatz des \textit{Last Will} können andere Clients über den Offline-Status informiert werden.
+Zudem schreiben beide Microcontroller ihren aktuellen Status bezüglich ihres MQTT-Clients in das Topic \texttt{plantzz/espsensors/status} für den Mikrocontroller der Sensoren bzw. in das Topic \texttt{plantzz/espactuators/status} für den Mikrocontroller der Aktoren. Der Einsatz eines solchen \textit{Last Will} eignet sich, damit der Status auch im Falle eines unerwarteten Verbindungsverlustes zum Mikrocontroller aktualisiert wird. Durch den Einsatz des \textit{Last Will} können andere Clients über den Offline-Status informiert werden.
