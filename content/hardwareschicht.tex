@@ -19,7 +19,7 @@ Für die Ermittlung der Helligkeit wird ein LDR Fotowiderstand Sensor eingesetzt
     \caption{Berechnung des Lux Werts des LDR Fotowiderstands}\label{fig:LDR_Berechnung}
 \end{figure}
 
-Die drei oben aufgeführten Sensoren werden an einen ESP32-Mikrocontroller angeschlossen, welcher mit dem hausinternen WLAN verbunden ist. Abb. \ref{fig:wokwi_sensoren} zeigt nochmals zusammenfassend einen visuellen Auszug aus Wokwi, auf dem der Anschluss der Sensorik an den ESP32-Mikrocontroller dargestellt ist. Auf der rechten Seite befinden sich die beiden DHT22 Sensoren, auf der linken Seite der LDR Fotowiderstand Sensor und in der Mitte der ESP32-Mikrocontroller.
+Die drei oben aufgeführten Sensoren werden an einen ESP32-Mikrocontroller angeschlossen, welcher mit dem hausinternen \gls{wlan} verbunden ist. Abb. \ref{fig:wokwi_sensoren} zeigt nochmals zusammenfassend einen visuellen Auszug aus Wokwi, auf dem der Anschluss der Sensorik an den ESP32-Mikrocontroller dargestellt ist. Auf der rechten Seite befinden sich die beiden DHT22 Sensoren, auf der linken Seite der LDR Fotowiderstand Sensor und in der Mitte der ESP32-Mikrocontroller.
 
 \begin{figure}[h]
     \centering
@@ -32,7 +32,7 @@ Bezüglich der Steuerung der Markise, um die Sonneneinstrahlung zu reduzieren, v
 
 Die Steuerung der Wasserpumpe übernimmt ein Relais, welches durch das Schalten eines neuen Stromkreises die Wasserpumpe an- bzw. ausschalten kann. In MicroPython definieren die Werte '0' und '1' des Relais, ob der Stromkreis geschlossen oder offen ist. In Wokwi haben wir zu Demonstrationszwecken eine LED an das Relais angeschlossen, um zu veranschaulichen, ob die Wasserpumpe läuft oder nicht. Im realen Anwendungsfall wird an das Relais anstatt der Wokwi-LED eine Wasserpumpe angeschlossen.
 
-Die beiden Aktoren Servo-Motor und Relais sind an einen ESP32-Mikrocontroller angeschlossen, welcher zusammen mit dem Mikrocontroller der Sensoren mit dem hausinternen WLAN verbunden ist. Abb. \ref{fig:wokwi_aktoren} zeigt nochmals, analog zum vorherigen Unterkapitel, einen Ausschnitt aus Wokwi, auf dem die Verkabelung der Aktoren mit dem ESP32-Mikrocontroller dargestellt ist. Am oberen Bildrand befindet sich der Servo-Motor, am unteren Bildrand das Relais mit angeschlossener LED und links der ESP32-Mikrocontroller.
+Die beiden Aktoren Servo-Motor und Relais sind an einen ESP32-Mikrocontroller angeschlossen, welcher zusammen mit dem Mikrocontroller der Sensoren mit dem hausinternen \gls{wlan} verbunden ist. Abb. \ref{fig:wokwi_aktoren} zeigt nochmals, analog zum vorherigen Unterkapitel, einen Ausschnitt aus Wokwi, auf dem die Verkabelung der Aktoren mit dem ESP32-Mikrocontroller dargestellt ist. Am oberen Bildrand befindet sich der Servo-Motor, am unteren Bildrand das Relais mit angeschlossener LED und links der ESP32-Mikrocontroller.
 
 \begin{figure}[h]
     \centering
