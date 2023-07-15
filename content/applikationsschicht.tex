@@ -125,4 +125,17 @@ Neben der Frostschutzfunktion können weitere Chat-Funktionen in Node-RED ausges
 
 \subsection{Visualisierung in einem Grafana-Dashboard}
 
-qqq
+Der Nutzer soll einen Überblick erhalten, welche Temperatur und Luftfeuchtigkeit in seinem Garten vorliegt. Ebenso soll der aktuelle Zustand als auch der zeitliche Verlauf der Pumpe und der Markise einsehbar sein.
+Für die Visualisierung der Sensorwerte als auch der Zustände der Aktoren wurde ein Grafana-Dashboard gebaut (siehe Abb. \ref{fig:grafana}). Durch das Deployment in einer Cloud-Infrastruktur lassen sich ortsunabhängig diese Werte einsehen, also bspw. auch wenn der Nutzer im Urlaub ist.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{grafana.png}
+  \caption{Dashboard in Grafana}\label{fig:grafana}
+\end{figure}
+
+Um die abgebildeten Daten in den verschiedenen Dashboard-Kacheln anzuzeigen, wurden mithilfe der Abfragesprache \textit{Flux} die relevanten Daten aus der Datenbank ausgelesen. 
+Für den Aufbau des Dashboards wurde eine Connection zu der InfluxDB hergestellt. Per Default ist zum Zeitpunkt des Laborprojekts in Grafana die Version 1 von InfluxDB mit abweichend zu konfigurierenden Parametern hinterlegt. Da in diesem Laborprojekt die neuere Version 2 der InfluxDB eingesetzt wird, gilt es diese Version beim Aufbauen der Verbindung in Grafana zu berücksichtigen. 
+
+
+
