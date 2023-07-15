@@ -6,7 +6,7 @@ Die Aufgaben der Anwendungsschicht sind es, die von den Sensoren gesammelten Dat
 Zu diesem Zweck wird die Low-Code/No-Code Plattform Node-RED eingesetzt. Die Plattform erlaubt es über eine einfache, grafische Benutzeroberfläche Programmabläufe zu gestalten und bietet viele vorgefertigte Integrationen zu Softwarelösungen, welche im \gls{iot} beliebt sind.
 Beispiele zu vorgefertigten Integrationen sind MQTT und die Time-Series-Datenbank InfluxDB.
 Letztere wird ebenfalls im Rahmen dieser intelligenten Gartenbewässerung zur Speicherung und Auswertung der Sensorwerte eingesetzt. Eine \gls{vm} in der Computing-Infrastruktur der DHBW Mannheim dient dazu, um eine Instanz der Plattform Node-RED und eine InfluxDB darauf zu installieren. Für die Visualisierung der wichtigsten Informationen in der Gartenbewässerungsanlage wird eine Grafana-Service ergänzt. 
-In einer Container-Umgebung mit \textit{Docker} lassen sich die entsprechende Services einfach starten. \textit{Docker Compose} eignet sich hierbei zum Definieren und Ausführen von mehreren verschiedenen Docker-Anwendungen. Die Compose-Datei aus diesem Laborprojekt ist in List. \ref{list:docker} dargestellt.
+In einer Container-Umgebung mit \textit{Docker} lassen sich die entsprechende Services einfach starten. \textit{Docker Compose} eignet sich hierbei zum Definieren und Ausführen von mehreren verschiedenen Docker-Anwendungen. Die Compose-Datei aus diesem Laborprojekt ist in List. \ref{list:docker} dargestellt. Das Setup 
 
 \begin{listing}[!ht]
 \begin{minted}{python3}
