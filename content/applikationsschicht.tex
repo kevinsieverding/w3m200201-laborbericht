@@ -5,52 +5,13 @@
 Die Aufgaben der Anwendungsschicht sind es, die von den Sensoren gesammelten Daten zu speichern und auf diesen aufbauend die Aktoren zu steuern.
 Zu diesem Zweck wird die Low-Code/No-Code Plattform Node-RED eingesetzt. Die Plattform erlaubt es über eine einfache, grafische Benutzeroberfläche Programmabläufe zu gestalten und bietet viele vorgefertigte Integrationen zu Softwarelösungen, welche im \gls{iot} beliebt sind.
 Beispiele zu vorgefertigten Integrationen sind MQTT und die Time-Series-Datenbank InfluxDB.
-Letztere wird ebenfalls im Rahmen dieser intelligenten Gartenbewässerung zur Speicherung und Auswertung der Sensorwerte eingesetzt. Eine \gls{vm} in der Computing-Infrastruktur der DHBW Mannheim dient dazu, um eine Instanz der Plattform Node-RED und eine InfluxDB darauf zu installieren. Für die Visualisierung der wichtigsten Informationen in der Gartenbewässerungsanlage wird eine Grafana-Service ergänzt. 
-In einer Container-Umgebung mit \textit{Docker} lassen sich die entsprechende Services einfach starten. \textit{Docker Compose} eignet sich hierbei zum Definieren und Ausführen von mehreren verschiedenen Docker-Anwendungen. Die Compose-Datei aus diesem Laborprojekt ist in List. \ref{list:docker} dargestellt. Das Setup 
+Letztere wird ebenfalls im Rahmen dieser intelligenten Gartenbewässerung zur Speicherung und Auswertung der Sensorwerte eingesetzt. Eine \gls{vm} in der Computing-Infrastruktur der DHBW Mannheim dient dazu, um eine Instanz der Plattform Node-RED, InfluxDB und Grafana darauf zu installieren. 
+In einer \textit{Docker}-Umgebung lassen sich die entsprechende Services als Container einfach starten. \textit{Docker Compose} eignet sich hierbei zum Definieren und Ausführen von mehreren verschiedenen Docker-Anwendungen. Die Compose-Datei aus diesem Laborprojekt ist im Anhang in List. \ref{list:docker} dargestellt.
 
-\begin{listing}[!ht]
-\begin{minted}{python3}
-node-red:
-influxdb-config:
-influxdb-data:
-grafana_storage:
-
-services:
-node-red:
-  image: nodered/node-red
-  container_name: node-red
-  restart: unless-stopped
-  volumes:
-    - node-red:/data
-  ports:
-    - 80:1880
-influxdb:
-  image: influxdb
-  container_name: influxdb
-  restart: unless-stopped
-  volumes:
-    - influxdb-config:/etc/influxdb2
-    - influxdb-data:/var/lib/influxdb2
-  ports:
-    - 8086:8086
-  env_file: .env-influxdb
-grafana:
-  image: grafana/grafana-enterprise
-  container_name: grafana
-  restart: unless-stopped
-  volumes:
-    - grafana_storage:/var/lib/grafana
-  ports:
-    - 3000:3000
-\end{minted}
-\caption{Definition der Container in docker-compose.yml}
-\label{list:docker}
-\end{listing}  
-
-In der Node-RED-Umgebung sind die folgenden Anwendungsszenarien umgesetzt: Speicherung der Sensordaten, Steuerung der Pumpe, Steuerung der Markise und die Interaktion mit dem Nutzer über einen Bot des Messenger-Dienstes Telegram.
+In der Node-RED-Umgebung sind die folgenden Anwendungsszenarien umgesetzt: Speicherung der Sensordaten, Steuerung der Pumpe, Steuerung der Markise und die Interaktion mit dem Nutzer über einen Bot des Messenger-Dienstes Telegram. 
 
 Die Logik zur Speicherung der Sensordaten ist simpel. 
-Je ein Programmablauf in Node-RED hört auf die Topics der verschiedenen Sensorwerte, bringt die Daten in ein passendes Format und schreibt sie in die InfluxDB.
+Je ein Programmablauf in Node-RED hört auf die Topics der verschiedenen Sensorwerte, bringt die Daten in ein passendes Format und schreibt sie in die InfluxDB. 
 Die Steuerung von Wasserpumpe und Markise sind allerdings komplexer und werden daher im Folgenden nochmal im Detail beschrieben.
 
 \subsection{Steuerung der Wasserpumpe}
@@ -98,7 +59,7 @@ Die folgende Abb. \ref{fig:canvas-activation} zeigt den entsprechenden Ablauf in
 
 Der Workflow startet, wie auch bei der Pumpensteuerung, mittels eines CRON-Triggers einmal pro Minute. Damit die Markise ausfährt werden hintereinander die Werte für die drei Kriterien ermittelt. 
 
-Wenn der Durschnitt der Umgebungstemperatur in den letzten fünf Minuten über 20° Celsius liegt, ist der erste Check bestanden. Diese Grenze wurde eingeführt, da eine Beschattung im Sommer beziehungsweise bei hohen Temperaturen hilft, damit die Pflanzen nicht austrocken. Bei kälteren Temperaturen würde eine Beschattung wertvolle Sonnenstrahlen von den Pflanzen abhalten. Die zweite Überprüfung betrifft die Helligkeit, für welche ebenfalls der Durschnittswert der letzen fünf Minuten ausschlaggebend ist. Wenn dieser Wert über 15000 Lux liegt ist ein weiterer Kontrollpunkt überschritten. Der letzte Punkt, der noch überprüft wird, dient der Unversehrtheit der Markise. Die Markise darf nur ausfahren wenn die Windgeschwindigkeit von 14 m/s nicht überschritten ist.
+Wenn der Durschnitt der Umgebungstemperatur in den letzten fünf Minuten über 20° Celsius liegt, ist der erste Check bestanden. Diese Grenze wurde eingeführt, da eine Beschattung im Sommer beziehungsweise bei hohen Temperaturen hilft, damit die Pflanzen nicht austrocken. Bei kälteren Temperaturen würde eine Beschattung wertvolle Sonnenstrahlen von den Pflanzen abhalten. Die zweite Überprüfung betrifft die Helligkeit, für welche ebenfalls der Durschnittswert der letzen fünf Minuten ausschlaggebend ist. Wenn dieser Wert über 15.000 Lux liegt ist ein weiterer Kontrollpunkt überschritten. Der letzte Punkt, der noch überprüft wird, dient der Unversehrtheit der Markise. Die Markise darf nur ausfahren wenn die Windgeschwindigkeit von 14 m/s nicht überschritten ist.
 
 Sind die drei Werte zur Überprüfung der Bedingungen ermittelt worden, so wird der Sub-Workflow zur Markisensteuerung angestoßen. Abb. \ref{fig:canvas-control} zeigt einen Ausschnitt aus Node-RED bezüglich des Sub-Workflows.
 
@@ -134,8 +95,8 @@ Für die Visualisierung der Sensorwerte als auch der Zustände der Aktoren wurde
   \caption{Dashboard in Grafana}\label{fig:grafana}
 \end{figure}
 
-Um die abgebildeten Daten in den verschiedenen Dashboard-Kacheln anzuzeigen, wurden mithilfe der Abfragesprache \textit{Flux} die relevanten Daten aus der Datenbank ausgelesen. 
-Für den Aufbau des Dashboards wurde eine Connection zu der InfluxDB hergestellt. Per Default ist zum Zeitpunkt des Laborprojekts in Grafana die Version 1 von InfluxDB mit abweichend zu konfigurierenden Parametern hinterlegt. Da in diesem Laborprojekt die neuere Version 2 der InfluxDB eingesetzt wird, gilt es diese Version beim Aufbauen der Verbindung in Grafana zu berücksichtigen. 
+Für den Aufbau des Dashboards wurde zunächst eine Connection zu der InfluxDB in Grafana hergestellt. Per Default ist zum Zeitpunkt des Laborprojekts in Grafana die Version 1 von InfluxDB mit abweichend zu konfigurierenden Parametern hinterlegt. Da in diesem Laborprojekt die neuere Version 2 der InfluxDB eingesetzt wird, muss diese Version beim Verbindungsaufbau in Grafana berücksichtigt werden. 
+Um die abgebildeten Informationen in den verschiedenen Dashboard-Kacheln anzuzeigen, wurden mithilfe der Abfragesprache \textit{Flux} die relevanten Daten aus der InfluxDB ausgelesen. 
 
 
 

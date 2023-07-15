@@ -1,10 +1,7 @@
 % !TeX root = ../index.tex
 
 \section{Anforderungen} \label{sec:anforderungen}
-In diesem Kapitel werden die technischen Anforderungen an das \gls{iot}-System aufgelistet.
-
-\paragraph{Systemübersicht}
-Die \gls{iot}-Gartenbewässerungsanlage sollte in der Lage sein, den Wasserverbrauch effizient und automatisch zu steuern, um den Pflanzen im Garten eine optimale Bewässerung zu bieten. Das System sollte aus Sensoren, Aktoren, einer zentralen Steuereinheit und einer Benutzeroberfläche bestehen.
+In diesem Kapitel werden die Anforderungen an das \gls{iot}-System aufgelistet. Die \gls{iot}-Gartenbewässerungsanlage sollte in der Lage sein, den Wasserverbrauch effizient und automatisch zu steuern, um den Pflanzen im Garten eine optimale Bewässerung zu bieten. Das System sollte aus Sensoren, Aktoren, einer zentralen Steuereinheit und einer Benutzeroberfläche bestehen.
 
 \paragraph{Sensoren}
 \begin{itemize}
@@ -40,21 +37,20 @@ Die \gls{iot}-Gartenbewässerungsanlage sollte in der Lage sein, den Wasserverbr
 
 \paragraph{Benutzeroberfläche}
 \begin{itemize}
-  \item Smartphone-App oder Webanwendung: zur Fernsteuerung und Überwachung der \gls{iot}-Gartenbewässerungsanlage, Anzeige von Sensordaten und Einstellung von Bewässerungsparametern
+  \item Dashboard: zur Überwachung der \gls{iot}-Gartenbewässerungsanlage durch Anzeige von Sensor- und Aktordaten
   \item Benachrichtigungsfunktion: um den Benutzer über den aktuellen Systemstatus oder wichtige Ereignisse (z.B. Frostgefahr) zu informieren
 \end{itemize}
 
 \paragraph{Softwareanforderungen}
 \begin{itemize}
   \item Automatisierung: Die Bewässerungsanlage sollte in der Lage sein, automatisch auf Basis der Sensordaten und vordefinierter Schwellenwerte zu arbeiten
-  \item Manueller Modus: Möglichkeit zur manuellen Steuerung der Bewässerung über die Benutzeroberfläche, falls erforderlich
   \item Anpassungsfähigkeit: Die Software sollte in der Lage sein, mit unterschiedlichen Gartenlayouts, Pflanzentypen und Bewässerungszonen umzugehen
 \end{itemize}
 
 
 \section{Systemarchitektur} \label{sec:architektur}
 
-Für die Umsetzung der technischen Anforderungen wird die in in Abb. \ref{fig:iotschichten} modellierte Systemarchitektur gewählt.
+Für die Umsetzung der Anforderungen wird die in in Abb. \ref{fig:iotschichten} modellierte Systemarchitektur gewählt.
 
 \begin{figure}[h]
   \centering

@@ -38,13 +38,13 @@ connect_wifi()
 
 print("Connecting to MQTT server... ", end="")
 mqtt_client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, user=MQTT_USER, password=MQTT_PASSWORD, keepalive=20)
-mqtt_client.set_last_will("espsensors/status", "offline", retain=True)
+mqtt_client.set_last_will("plantzz/espsensors/status", "offline", retain=True)
 
 mqtt_client.connect()
-mqtt_client.publish('espsensors/status', 'online', retain=True)
+mqtt_client.publish('plantzz/espsensors/status', 'online', retain=True)
 print("MQTT Connected!")
 \end{minted}
-\caption{Python-Implementierung des Mikrocontroller der Sensoren (Part 1)}
+\caption{Python-Implementierung des ESP der Sensoren (Part 1)}
 \label{list:wokwi_sensoren1}
 \end{listing}
 
@@ -62,7 +62,7 @@ ldr = ADC(Pin(32, Pin.IN))
 
 def publish_sensor_value(sensor_value, topic_name):
     message = ujson.dumps({
-    "value": sensor_value,
+        "value": sensor_value,
     })
     print("Reporting to MQTT topic {}: {}".format(topic_name, message))
     mqtt_client.publish(topic_name, message)
@@ -131,7 +131,7 @@ connect_wifi()
 
 print("Connecting to MQTT server... ", end="")
 mqtt_client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, user=MQTT_USER, password=MQTT_PASSWORD, keepalive=100)
-mqtt_client.set_last_will("espactuators/status", "offline", retain=True)
+mqtt_client.set_last_will("plantzz/espactuators/status", "offline", retain=True)
 \end{minted}
 \caption{Python-Implementierung des ESP der Aktoren (Part 1)}
 \label{list:wokwi_aktoren1}
@@ -216,3 +216,42 @@ mqtt_client.disconnect()
 \caption{Python-Implementierung des ESP der Aktoren (Part 3)}
 \label{list:wokwi_aktoren3}
 \end{listing}
+
+\begin{listing}[!ht]
+\begin{minted}{python3}
+node-red:
+influxdb-config:
+influxdb-data:
+grafana_storage:
+
+services:
+    node-red:
+        image: nodered/node-red
+        container_name: node-red
+        restart: unless-stopped
+        volumes:
+        - node-red:/data
+        ports:
+        - 80:1880
+    influxdb:
+        image: influxdb
+        container_name: influxdb
+        restart: unless-stopped
+        volumes:
+        - influxdb-config:/etc/influxdb2
+        - influxdb-data:/var/lib/influxdb2
+        ports:
+        - 8086:8086
+        env_file: .env-influxdb
+    grafana:
+        image: grafana/grafana-enterprise
+        container_name: grafana
+        restart: unless-stopped
+        volumes:
+        - grafana_storage:/var/lib/grafana
+        ports:
+        - 3000:3000
+\end{minted}
+\caption{Definition der Container in docker-compose.yml}
+\label{list:docker}
+\end{listing}  
