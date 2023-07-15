@@ -2,8 +2,10 @@
 
 \section{Technische Anforderungen und Systemdesign}
 
+In diesem Kapitel werden zunächst Anforderungen an das Gartenbewässerungssystem gesammelt und anschließend ein System entworfen, welches die drei Schichten einer \gls{iot}-Systemarchitektur umfasst.
+
 \subsection{Technische Anforderungen}
-Nachfolgend werden die technischen Anforderungen an das \gls{iot}-System beschrieben.
+Beginnend mit diesem Unterkapitel wird nachfolgend eine Sammlung der technischen Anforderungen an das \gls{iot}-System durchgeführt.
 
 \paragraph{Systemübersicht}
 Die \gls{iot}-Gartenbewässerungsanlage sollte in der Lage sein, den Wasserverbrauch effizient und automatisch zu steuern, um den Pflanzen im Garten eine optimale Bewässerung zu bieten. Das System sollte aus Sensoren, Aktoren, einer zentralen Steuereinheit und einer Benutzeroberfläche bestehen.
@@ -32,7 +34,7 @@ Die \gls{iot}-Gartenbewässerungsanlage sollte in der Lage sein, den Wasserverbr
 \paragraph{Kommunikation}
 \begin{itemize}
   \item Mikrocontroller: zur Verarbeitung der Sensordaten, Steuerung der Aktoren und Kommunikation über eine Netzwerkschicht
-  \item Kommunikationsprotokoll: \gls{wlan}, um eine drahtlose Verbindung zwischen den Hardwarekomponenten und der Steuereinheit herzustellen
+  \item Kommunikationsprotokoll: \gls{wlan}, um eine drahtlose Verbindung zu den Mikrocontrollern herzustellen
 \end{itemize}
 
 \paragraph{Steuereinheit}
@@ -64,6 +66,6 @@ Für die Umsetzung der technischen Anforderungen wird die in in Abb. \ref{fig:io
   \caption{Aufbau der IoT-Architektur}\label{fig:iotschichten}
 \end{figure}
 
-Auf Hardwareebene kommt ein ESP32-Mikrocontroller zum Einsatz, um die Sensordaten über einen MQTT-Broker zu veröffentlichen. Gleichzeitig wird für die Aktoren ein eigener ESP32-Mikrocontroller eingesetzt, um die Wasserpumpe und Beschattung über eine Markise mit Servo-Motor zu steuern. Die Befehle zur Steuerung der Aktoren werden von dem MQTT-Broker empfangen. Der MQTT-Broker agiert dabei als Vermittler der Nachrichten in der Netzwerkschicht. In der Applikationsschicht wird mit Node-RED die Logik für die \gls{iot}-Steuerung implementiert, über Telegram werden der Benutzer über wichtige Informationen benachrichtigt und in Grafana werden mittels eines Dashboards relevante Daten in Form von Auswertungen für den Nutzer aufbereitet.
+Auf Hardwareebene kommt ein ESP32-Mikrocontroller zum Einsatz, um die Sensordaten über einen MQTT-Broker zu veröffentlichen. Gleichzeitig wird für die Aktoren ebenfalls ein ESP32-Mikrocontroller eingesetzt, um die Wasserpumpe zur Bewässerung und den Servo-Motor zur Beschattung zu steuern. Die Befehle zur Steuerung der Aktoren werden von dem MQTT-Broker empfangen. Der MQTT-Broker agiert dabei als Vermittler der Nachrichten in der Netzwerkschicht. In der Applikationsschicht wird mit Node-RED die Logik für die \gls{iot}-Steuerung implementiert, über Telegram wird der Benutzer über wichtige Informationen benachrichtigt und in Grafana werden mittels eines Dashboards relevante Daten in Form von Auswertungen für den Nutzer aufbereitet.
 
 Die einzelnen Schichten aus der Systemarchitektur werden in den nachfolgenden Kapiteln näher beschrieben.
